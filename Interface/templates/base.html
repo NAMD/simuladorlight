@@ -1,6 +1,6 @@
 {% extends 'bootstrap.html' %}
 {% load bootstrap3 %}
-
+{% load static %}
 {% block bootstrap3_content %}
 
     <!-- Wrap all page content here -->
@@ -15,39 +15,20 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{% url 'home' %}">Projeto Alerta Dengue</a>
+                    <img  src="{% static 'img/light.jpg' %}" height="50px" align="bottom"><a class="navbar-brand" href="{% url 'home' %}">Simulador de Processos</a>
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="{% url "home" %}">Início</a></li>
-                        <li><a href="{% url "about" %}">Sobre o Projeto</a></li>
-                        <li><a href="{% url "contact" %}">Fale Conosco</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Acesse os Dados <b
-                                    class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-header">Incidência (SINAN)</li>
-                                <li><a href="{% url "sinan" 2010 00 %}">SINAN (2010)</a></li>
-                                <li><a href="{% url "sinan" 2011 00 %}">SINAN (2011)</a></li>
-                                <li><a href="{% url "sinan" 2012 00 %}">SINAN (2012)</a></li>
-                                <li><a href="{% url "sinan" 2013 00 %}">SINAN (2013)</a></li>
-                                <li class="divider"></li>
-                                <li class="dropdown-header">Dados Entomológicos</li>
-                                <li><a href="#">Ovitrampas</a></li>
-                                <li><a href="#">LIRAa</a></li>
-                                <li class="divider"></li>
-                                <li class="dropdown-header">Dados Climáticos</li>
-                            </ul>
-                        </li>
+{#                        <li><a href="{% url "about" %}">Sobre o Simulador</a></li>#}
+{#                        <li><a href="{% url "contact" %}">Fale Conosco</a></li>#}
+
                     </ul>
                 </div>
                 <!--/.nav-collapse -->
-                <ul class="nav nav-pills">
-                    <li id="alerta" class="active"><a href="{% url 'home' %}">Alerta</a></li>
-                    <li id="dengue"><a href="{% url 'mapadengue' %}">Mapa da Dengue</a></li>
-                    <li id="vetor"><a href="{% url 'mapamosquito' %}">Mapa do Vetor</a></li>
-                    <li id="historico"><a href="{% url 'historico' %}">Histórico</a></li>
-                </ul>
+{#                <ul class="nav nav-pills">#}
+{#                    <li id="painel" class="active"><a href="{% url 'home' %}">Painel de Controle</a></li>#}
+{#                </ul>#}
                 <script type="application/javascript">
                    // $('ul.nav.nav-pills li a').click(function () {
                      //   $(this).parent().addClass('active').siblings().removeClass('active');

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block extra_head %}
+    {% load static %}
     {% load leaflet_tags %}
     {% leaflet_js %}
     {% leaflet_css %}
@@ -7,6 +8,33 @@
     <style>
         .leaflet-container {
             height: 600px;
+
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
+
+        .legend {
+            text-align: left;
+            line-height: 18px;
+            color: #555;
+        }
+
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
         }
     </style>
     <script src="/static/js/heatmap.js"></script>
@@ -16,109 +44,169 @@
 {% endblock %}
 
 
-{% block title %}<br><a href="{% url 'home' %}">Mapa de Casos</a>{% endblock %}
+{% block title %}<br><a href="{% url 'home' %}">Mapa de Processos</a>{% endblock %}
 
 {% block content %}
-    <div id="progress" style="display: none">
-        <div id="progress-bar" style="display: none"></div>
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">Parâmetros</h3></div>
+        <div class="panel-body">
+
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="HorizonteInput" class="col-sm-2 control-label">Horizonte de Previsão:</label>
+
+                    <div class="col-sm-2">
+                        <input type="number" class="form-control" id="HorizonteInput" placeholder="90 dias">
+                    </div>
+                    <label for="NotasToi" class="col-sm-2 control-label">Toi:</label>
+
+                    <div class="col-sm-2">
+                        <input type="number" class="form-control" id="NotasToi" placeholder="100">
+                    </div>
+                    <label for="NotasCorte" class="col-sm-2 control-label">Corte:</label>
+
+                    <div class="col-sm-2">
+                        <input type="number" class="form-control" id="NotasCorte" placeholder="100">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="NotasNeg" class="col-sm-2 control-label">Negativação:</label>
+
+                    <div class="col-sm-4">
+                        <input type="number" class="form-control" id="NotasNeg" placeholder="100">
+                    </div>
+                    <label for="RecInput" class="col-sm-2 control-label">Prevalência de Reclamações:</label>
+
+                    <div class="col-sm-4">
+                        <input type="number" class="form-control" id="RecInput" placeholder="30%">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-default">Atualizar previsão</button>
+            </form>
+        </div>
     </div>
 
-    <h1>Casos de Dengue no município do Rio de Janeiro, em <b id="ano">2010</b> segundo SINAN.</h1>
-    <b>Year: </b> <select id="year">
-    <option value="2010">2010</option>
-    <option value="2011">2011</option>
-    <option value="2012">2012</option>
-    <option value="2013">2013</option>
-</select><br>
+    <br>
 
     {% leaflet_map "main" callback="main_map_init" %}
 
     <script type="text/javascript">
-        $('ul.nav.nav-pills li a').parent().removeClass('active')
-        $('#dengue').addClass('active')
 
-        var case_layers = L.layerGroup();
-        var progress = $("#progress");
-        var progressBar = $("#progress-bar");
-        $("select").change(function () {
-            $(this).find("option:selected").each(function () {
-                redraw_map($("#year option:selected").val())
-            });
-        });
-        function redraw_map(year) {
-            case_layers.clearLayers();
-            var map = $(document).data('map')
-            map._layersMaxZoom=13
-            $.getJSON("/sinan/" + year.toString() + "/40", function (data) {
-                var markers = L.markerClusterGroup({ spiderfyOnMaxZoom: true, showCoverageOnHover: true,
-                    zoomToBoundsOnClick: true, chunkedLoading: true, chunkProgress: updateProgressBar });
-                // Add GeoJSON layer
-                var geojson = L.geoJson(data, {onEachFeature: function (feature, layer) {
-                    layer.bindPopup(feature.properties.data);
-                }
-                });
-                markers.addLayer(geojson);
-                case_layers.addLayer(markers);
-                case_layers.addTo(map);
-            });
-            $("#ano").text(year.toString())
+        var municipios = L.layerGroup();
+        var info = L.control();
+        var legend = L.control({position: 'bottomright'});
+        var geojson;
+
+        // get color depending on population density value
+        function getColor(d) {
+            return d > 1000 ? '#800026' :
+                    d > 500 ? '#BD0026' :
+                            d > 200 ? '#E31A1C' :
+                                    d > 100 ? '#FC4E2A' :
+                                            d > 50 ? '#FD8D3C' :
+                                                    d > 20 ? '#FEB24C' :
+                                                            d > 10 ? '#FED976' :
+                                                                    '#FFEDA0';
         }
-        ;
-        function updateProgressBar(processed, total, elapsed, layersArray) {
-            if (elapsed > 1000) {
-                // if it takes more than a second to load, display the progress bar:
-                $("#progress").css("display", 'block');
-                $("#progress-bar").css("width", Math.round(processed / total * 100) + '%');
+
+        function style(feature) {
+            return {
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7,
+                fillColor: getColor(feature.properties.density)
+            };
+        }
+
+        function highlightFeature(e) {
+            var layer = e.target;
+
+            layer.setStyle({
+                weight: 5,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.7
+            });
+
+            if (!L.Browser.ie && !L.Browser.opera) {
+                layer.bringToFront();
             }
 
-            if (processed === total) {
-                // all markers processed - hide the progress bar:
-                $("#progress").css("display", 'none');
-            }
+            info.update(layer.feature.properties);
         }
+
+        function resetHighlight(e) {
+            geojson.resetStyle(e.target);
+            info.update();
+        }
+
+
         function main_map_init(map, options) {
             $(document).data('map', map)
-            map._layersMaxZoom=13
+            //map._layersMaxZoom=13
             $("#ano").text("2010")
-            var dataurl = '{% url "sinan" 2010 00%}';
-            // Download GeoJSON via Ajax
-            var geojson;
-            var heatmap_points = {
-                max: 46,
-                data: [],
+            var dataurl = "{% static 'rjmun.geojson' %}";
+
+            // control that shows state info on hover
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
             };
+
+            info.update = function (props) {
+                this._div.innerHTML = '<h4>Número esperado de processos</h4>' + (props ?
+                        '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
+                        : 'Passe o mouse sobre um município');
+            };
+
+            info.addTo(map);
+
+            legend.onAdd = function (map) {
+
+                var div = L.DomUtil.create('div', 'info legend'),
+                        grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+                        labels = [],
+                        from, to;
+
+                for (var i = 0; i < grades.length; i++) {
+                    from = grades[i];
+                    to = grades[i + 1];
+
+                    labels.push(
+                            '<i style="background:' + getColor(from + 1) + '"></i> ' +
+                                    from + (to ? '&ndash;' + to : '+'));
+                }
+
+                div.innerHTML = labels.join('<br>');
+                return div;
+            };
+
+            legend.addTo(map);
+            // Download GeoJSON via Ajax
             $.getJSON(dataurl, function (data) {
                 // Add GeoJSON layer
-                geojson = L.geoJson(data, {onEachFeature: function (feature, layer) {
-                    layer.bindPopup(feature.properties.data);
-                    heatmap_points.data.push({lat: feature.geometry.coordinates[1],
-                                              lon: feature.geometry.coordinates[0],
-                                              value:1})
+                geojson = L.geoJson(data, {style: style, onEachFeature: function (feature, layer) {
+                    layer.bindPopup(feature.properties.NM_MUNICIP);
+                    layer.on({
+                        mouseover: highlightFeature,
+                        mouseout: resetHighlight
+                    });
+
                 }
                 });
-                var markers = L.markerClusterGroup({ spiderfyOnMaxZoom: false, showCoverageOnHover: true,
-                    zoomToBoundsOnClick: true, chunkedLoading: true, chunkProgress: updateProgressBar });
-                markers.addLayer(geojson);
-                case_layers.addLayer(markers);
-                case_layers.addTo(map);
+
+                municipios.addLayer(geojson);
+                municipios.addTo(map);
             });
 
-            var heatmapLayer = L.TileLayer.heatMap({
-                    radius: { value: 15000, absolute: true },
-                    opacity: 0.8,
-                    gradient: {
-                        0.45: "rgb(0,0,255)",
-                        0.55: "rgb(0,255,255)",
-                        0.65: "rgb(0,255,0)",
-                        0.95: "yellow",
-                        1.0: "rgb(255,0,0)"
-                    }
-                });
-            heatmapLayer.setData(heatmap_points.data);
+
             var overlayMaps = {
-                    'Heatmap': heatmapLayer,
-                    'Cases': markers
-                };
+                'Municípios': municipios
+            };
             var controls = L.control.layers(null, overlayMaps, {collapsed: false});
             controls.addTo(map);
 

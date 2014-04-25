@@ -83,16 +83,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
+STATIC_ROOT = os.path.join(os.path.dirname(__file__), '..')  # up one level from settings.py
+STATICFILES_DIRS = (os.path.abspath(os.path.join(STATIC_ROOT, 'static')),)  # static is on root level
+
 STATIC_URL = '/static/'
 
 LEAFLET_CONFIG = {
     # 'SPATIAL_EXTENT': (),
-    'DEFAULT_CENTER': (-22.907111, -43.231864),
-    'DEFAULT_ZOOM': 11,
+    'DEFAULT_CENTER': (-22.207111, -43.231864),
+    'DEFAULT_ZOOM': 8,
     'MAXIMUM_ZOOM': 13,
     'TILES': 'http://{s}.tile.cloudmade.com/ad132e106cd246ec961bbdfbe0228fe8/997/256/{z}/{x}/{y}.png',
-    'MINIMAP': True,
-    'ATTRIBUTION_PREFIX': 'Powered by django-leaflet',
+    'MINIMAP': False,
+    'ATTRIBUTION_PREFIX': 'Developed by NAMD-EMAp-FGV',
     'PLUGINS': {
         'cluster': {
             'js': 'js/leaflet.markercluster.js',
