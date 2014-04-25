@@ -69,7 +69,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'UTC'
 
@@ -84,3 +84,24 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LEAFLET_CONFIG = {
+    # 'SPATIAL_EXTENT': (),
+    'DEFAULT_CENTER': (-22.907111, -43.231864),
+    'DEFAULT_ZOOM': 11,
+    'MAXIMUM_ZOOM': 13,
+    'TILES': 'http://{s}.tile.cloudmade.com/ad132e106cd246ec961bbdfbe0228fe8/997/256/{z}/{x}/{y}.png',
+    'MINIMAP': True,
+    'ATTRIBUTION_PREFIX': 'Powered by django-leaflet',
+    'PLUGINS': {
+        'cluster': {
+            'js': 'js/leaflet.markercluster.js',
+            'css': ['css/MarkerCluster.Default.css', 'css/MarkerCluster.css'],
+            'auto-include': True
+        },
+        'heatmap': {
+            'js': ['js/heatmap.js', 'js/heatmap-leaflet.js', 'js/QuadTree.js'],
+        }
+    }
+
+}
