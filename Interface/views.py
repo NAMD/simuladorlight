@@ -3,6 +3,7 @@ from django.views.generic.base import TemplateView, View
 from django.contrib import messages
 
 import json
+from Interface import Simulador
 
 
 
