@@ -9,6 +9,8 @@
         .leaflet-container {
             height: 600px;
 
+        }
+
         .info {
             padding: 6px 8px;
             font: 14px/16px Arial, Helvetica, sans-serif;
@@ -173,7 +175,7 @@
             legend.onAdd = function (map) {
 
                 var div = L.DomUtil.create('div', 'info legend'),
-                        grades = [0, 1, 2, 5, 10, 20, 50, 100],
+                        grades = [0, 2, 10, 30, 100, 200, 500, 1000],
                         labels = [],
                         from, to;
 
