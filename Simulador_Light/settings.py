@@ -90,21 +90,12 @@ STATIC_URL = '/static/'
 
 LEAFLET_CONFIG = {
     # 'SPATIAL_EXTENT': (),
-    'DEFAULT_CENTER': (-22.207111, -43.231864),
-    'DEFAULT_ZOOM': 8,
+    'DEFAULT_CENTER': (-22.407111, -43.231864),
+    'DEFAULT_ZOOM': 9,
     'MAXIMUM_ZOOM': 13,
     'TILES': 'http://{s}.tile.cloudmade.com/ad132e106cd246ec961bbdfbe0228fe8/997/256/{z}/{x}/{y}.png',
     'MINIMAP': False,
     'ATTRIBUTION_PREFIX': 'Developed by NAMD-EMAp-FGV',
-    'PLUGINS': {
-        'cluster': {
-            'js': 'js/leaflet.markercluster.js',
-            'css': ['css/MarkerCluster.Default.css', 'css/MarkerCluster.css'],
-            'auto-include': True
-        },
-        'heatmap': {
-            'js': ['js/heatmap.js', 'js/heatmap-leaflet.js', 'js/QuadTree.js'],
-        }
-    }
+
 
 }
