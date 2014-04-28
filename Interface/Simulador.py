@@ -124,8 +124,8 @@ def simula(horizonte=30, ntoi=0, ncorte=0, nneg=0):
                                       PARAMETROS.t*processos.tois_apl + PARAMETROS.n*processos.negs_apl + \
                                       PARAMETROS.tc*processos.tc_apl + PARAMETROS.tn*processos.tn_apl + \
                                       PARAMETROS.cn*processos.cn_apl + PARAMETROS.tcn*processos.tcn_apl))
-    print(processos)
-    print(processos.Novos.sum())
+    #print(processos)
+    #print(processos.Novos.sum())
     return processos
 
 

@@ -26,6 +26,7 @@ geocodigos = [3302007, 3304557, 3302858, 3305109, 3303500, 3300456, 3300308, 330
 ]
 
 mundict = OrderedDict(zip(municipios, geocodigos))
+geodict = OrderedDict(zip(geocodigos, municipios))
 
 class HomePageView(TemplateView):
     template_name = 'mapaprocessos.html'
@@ -63,8 +64,33 @@ class LocalAnalysisView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(LocalAnalysisView, self).get_context_data(**kwargs)
+        municipio = int(self.request.GET.get("municipio", "RIO DE JANEIRO"))
+
+        horizonte = 60
+        toi = 100
+        corte = 100
+        neg = 100
+        try:
+            toi = int(self.request.GET['toi'])
+            corte = int(self.request.GET['corte'])
+            neg = int(self.request.GET['neg'])
+            horizonte = int(self.request.GET['horizonte'])
+            processos = Simulador.simula(horizonte, toi, corte, neg)
+        except KeyError:
+            messages.error(self.request, "Todos os campos devem ser preenchidos")
+            processos = Simulador.simula(horizonte, toi, corte, neg)
+        processos = processos.set_index("geocodigo")
 
         context.update({
+            'municipio': geodict[municipio],
+            'geocodigo': municipio,
+            'mundict': json.dumps(list(mundict.items())),
+            'processos': processos.Novos.astype(int).to_json(),
+            'horizonte': horizonte,
+            'toi': toi,
+            'corte': corte,
+            'neg': neg,
+
 
         })
         return context
