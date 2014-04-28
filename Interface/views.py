@@ -1,12 +1,31 @@
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.views.generic.base import TemplateView, View
+#coding:utf8
+import json
+
+from django.views.generic.base import TemplateView
+
 from django.contrib import messages
 import pandas as pd
-import json
+from collections import OrderedDict
 from Interface import Simulador
 
+# Área de concessão da Light
+municipios = ['ITAGUAI', 'RIO DE JANEIRO', 'MESQUITA', 'SAO JOAO DE MERITI', 'NOVA IGUACU', 'BELFORD ROXO',
+              'BARRA DO PIRAI',
+              'VALENCA', 'NILOPOLIS', 'QUEIMADOS', 'VOLTA REDONDA', 'SEROPEDICA', 'ENG PAULO DE FRONTIN',
+              'DUQUE DE CAXIAS',
+              'JAPERI', 'PATY DO ALFERES', 'SAPUCAIA', 'TRES RIOS', 'PIRAI', 'RIO CLARO', 'BARRA MANSA', 'PARACAMBI',
+              'QUATIS',
+              'MENDES', 'PINHEIRAL', 'MIGUEL PEREIRA', 'VASSOURAS', 'CARMO', 'PARAIBA DO SUL', 'RIO DAS FLORES',
+              'CDOR LEVY GASPARIAN',
+]
+geocodigos = [3302007, 3304557, 3302858, 3305109, 3303500, 3300456, 3300308, 3306107, 3303203, 3304144, 3306305,
+              3305554,
+              3301801, 3301702, 3302270, 3303856, 3305406, 3306008, 3304003, 3304409, 3300407, 3303609, 3304128,
+              3302809, 3303955, 3302908,
+              3306206, 3301207, 3303708, 3304524, 3300951,
+]
 
+mundict = OrderedDict(zip(municipios, geocodigos))
 
 class HomePageView(TemplateView):
     template_name = 'mapaprocessos.html'
@@ -38,11 +57,12 @@ class HomePageView(TemplateView):
         })
         return context
 
+
 class LocalAnalysisView(TemplateView):
     template_name = 'local.html'
 
     def get_context_data(self, **kwargs):
-        context = super(LocalAnalysisView)
+        context = super(LocalAnalysisView, self).get_context_data(**kwargs)
 
         context.update({
 
