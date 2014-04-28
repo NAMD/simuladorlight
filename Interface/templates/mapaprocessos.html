@@ -103,6 +103,10 @@
         var info = L.control();
         var legend = L.control({position: 'bottomright'});
         var geojson;
+        $("#NotasNeg").val({{ neg }})
+        $("#NotasToi").val({{ toi }})
+        $("#NotasCorte").val({{ corte }})
+        $("#HorizonteInput").val({{ horizonte }})
 
         // get color depending on population density value
         function getColor(d) {
