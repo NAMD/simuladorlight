@@ -3,6 +3,5 @@ pytz
 django-leaflet
 django-bootstrap3
 django-debug-toolbar
-shapely
 pandas
 numpy
