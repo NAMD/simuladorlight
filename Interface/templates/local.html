@@ -47,6 +47,10 @@
 {% block title %}Análise Local - {{ municipio }}{% endblock %}
 
 {% block content %}
+    <div class="alert alert-warning">
+        <strong>{{ processos }}</strong> novos processos são esperados em {{ municipio }} em até {{ horizonte }} dias, em decorrência da
+        aplicação das notas especificadas abaixo.
+    </div>
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-6 col-md-6 main">
@@ -107,6 +111,8 @@
 
     </div>
     <script type="text/javascript">
+        $('#mapa').removeClass('active')
+        $('#local').addClass('active')
         function isInArray(el, array) {
             return (array.indexOf(el) >= 0) ? true : false;
         }
@@ -229,21 +235,23 @@
             $.getJSON(dataurl, function (data) {
                 // Add GeoJSON layer
                 geojson = L.geoJson(data, {style: style, onEachFeature: function (feature, layer) {
-                    feature.properties.processos = processos[parseInt(feature.properties.CD_GEOCODM)];
+                    feature.properties.processos = 0;
                     if (feature.properties.CD_GEOCODM == {{ geocodigo }}) {
+                        feature.properties.processos = {{ processos }};
                         map.fitBounds(layer.getBounds())
                         layer.setStyle({
                             weight: 5,
                             color: '#666',
                             dashArray: '',
+                            fillColor: getColor(feature.properties.processos),
                             fillOpacity: isInArray(parseInt(layer.feature.properties.CD_GEOCODM), area_light) ? 0.7 : 0.0
                         });
                     }
                     layer.bindPopup(feature.properties.NM_MUNICIP + "-" + feature.properties.CD_GEOCODM + "<br>" +
                             feature.properties.processos + " processos.");
                     layer.on({
-                        mouseover: highlightFeature,
-                        mouseout: resetHighlight
+                        mouseover: highlightFeature
+                        //mouseout: resetHighlight
                     });
 
                 }

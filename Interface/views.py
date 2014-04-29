@@ -76,17 +76,17 @@ class LocalAnalysisView(TemplateView):
             corte = int(self.request.GET['corte'])
             neg = int(self.request.GET['neg'])
             horizonte = int(self.request.GET['horizonte'])
-            processos = Simulador.simula(horizonte, toi, corte, neg)
+            processos = Simulador.simula_municipio(horizonte, toi, corte, neg, municipio)
         except KeyError:
             messages.error(self.request, "Todos os campos devem ser preenchidos")
-            processos = Simulador.simula(horizonte, toi, corte, neg)
-        processos = processos.set_index("geocodigo")
+            processos = Simulador.simula_municipio(horizonte, toi, corte, neg, municipio)
+        #processos = processos.set_index("geocodigo")
 
         context.update({
             'municipio': geodict[municipio],
             'geocodigo': municipio,
             'mundict': json.dumps(list(mundict.items())),
-            'processos': processos.Novos.astype(int).to_json(),
+            'processos': int(processos),
             'horizonte': horizonte,
             'toi': toi,
             'corte': corte,

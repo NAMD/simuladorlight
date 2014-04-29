@@ -57,32 +57,38 @@
 
                     <div class="col-sm-2">
                         <input type="number" class="form-control" id="HorizonteInput" placeholder="90 dias"
-                               name="horizonte">
+                               name="horizonte" data-toggle="tooltip" data-placement="top"
+                               title="Entre com a janela de tempo para a previsão.">
                     </div>
                     <label for="NotasToi" class="col-sm-2 control-label">Toi:</label>
 
                     <div class="col-sm-2">
-                        <input type="number" class="form-control" id="NotasToi" placeholder="100" name="toi">
+                        <input type="number" class="form-control" id="NotasToi" placeholder="100" name="toi"
+                               data-toggle="tooltip" data-placement="top"
+                               title="Entre com o numero de TOIs a serem aplicados.">
                     </div>
                     <label for="NotasCorte" class="col-sm-2 control-label">Corte:</label>
 
                     <div class="col-sm-2">
-                        <input type="number" class="form-control" id="NotasCorte" placeholder="100" name="corte">
+                        <input type="number" class="form-control" id="NotasCorte" placeholder="100" name="corte"
+                               data-toggle="tooltip" data-placement="top" title="Entre com o número de cortes a serem realizados.">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="NotasNeg" class="col-sm-2 control-label">Negativação:</label>
+                <div class=" form-group">
+                        <label for="NotasNeg" class="col-sm-2 control-label">Negativação:</label>
 
-                    <div class="col-sm-4">
-                        <input type="number" class="form-control" id="NotasNeg" placeholder="100" name="neg">
-                    </div>
-                    <label for="RecInput" class="col-sm-2 control-label">Prevalência de Reclamações:</label>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control" id="NotasNeg" placeholder="100" name="neg"
+                                   data-toggle="tooltip" data-placement="bottom" title="Entre com o número de negativações a serem realizadas.">
+                        </div>
+                        <label for=" RecInput" class="col-sm-2 control-label">Prevalência de Reclamações:</label>
 
-                    <div class="col-sm-4">
-                        <input type="number" class="form-control" id="RecInput" placeholder="30%" name="rec" disabled>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-default">Atualizar previsão</button>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control" id="RecInput" placeholder="30%" name="rec"
+                                       disabled data-toggle="tooltip" data-placement="bottom" title="O sistema levará em conta o número de reclamações existentes até o momento.">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-default">Atualizar previsão</button>
             </form>
         </div>
     </div>
@@ -90,12 +96,15 @@
     <br>
 
     <div class="alert alert-warning">
-        <strong>{{ total }}</strong> processos foram distribuidos em até {{ horizonte }} dias.
+        <strong>{{ total }}</strong> novos processos são esperados em até {{ horizonte }} dias, em decorrência da
+        aplicação das notas especificadas acima.
     </div>
 
     {% leaflet_map "main" callback="main_map_init" %}
 
     <script type="text/javascript">
+        $('#local').removeClass('active')
+        $('#mapa').addClass('active')
         function isInArray(el, array) {
             return (array.indexOf(el) >= 0) ? true : false;
         }
