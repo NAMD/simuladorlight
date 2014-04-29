@@ -64,7 +64,7 @@ def carrega_parametros():
     Lê os parâmetros da análise de sobrevivência, e retorna um dataframe indexado por município.
     :rtype : pd.DataFrame
     """
-    parametros = pd.read_csv("Interface/alphas-weibull.csv", index_col=0, header=0)
+    parametros = pd.read_csv("Interface/alphas.csv", index_col=0, header=0)
     #print(parametros[:10])
     return parametros
 
