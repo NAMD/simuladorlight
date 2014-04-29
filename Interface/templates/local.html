@@ -152,11 +152,21 @@
         }
 
         function style(feature) {
-            feature.properties.processos = processos[parseInt(feature.properties.CD_GEOCODM)];
+            var w = 5;
+            var c = 'white';
+            if (feature.properties.CD_GEOCODM == {{ geocodigo }}){
+                feature.properties.processos = {{ processos }};
+                c = '#666'
+            }
+            else{
+                feature.properties.processos = 0;
+                w = 1
+            }
+
             return {
-                weight: 2,
+                weight: w,
                 opacity: 1,
-                color: 'white',
+                color: c,
                 dashArray: '3',
                 fillOpacity: isInArray(parseInt(feature.properties.CD_GEOCODM), area_light) ? 0.7 : 0.0,
                 fillColor: getColor(feature.properties.processos)
@@ -250,8 +260,8 @@
                     layer.bindPopup(feature.properties.NM_MUNICIP + "-" + feature.properties.CD_GEOCODM + "<br>" +
                             feature.properties.processos + " processos.");
                     layer.on({
-                        mouseover: highlightFeature
-                        //mouseout: resetHighlight
+                        mouseover: highlightFeature,
+                        mouseout: resetHighlight
                     });
 
                 }

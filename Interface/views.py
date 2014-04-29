@@ -33,7 +33,7 @@ class HomePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
-        messages.info(self.request, 'Bem Vindo ao Simulador de Processos Judiciais.')
+        # messages.info(self.request, 'Bem Vindo ao Simulador de Processos Judiciais.')
         horizonte = 60
         toi = 100
         corte = 100
