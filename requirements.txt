@@ -1,5 +1,6 @@
 django
 pytz
+django >=1.6
 django-leaflet
 django-bootstrap3
 django-debug-toolbar
