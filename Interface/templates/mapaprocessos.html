@@ -56,7 +56,8 @@
                     <label for="HorizonteInput" class="col-sm-2 control-label">Horizonte de Previsão:</label>
 
                     <div class="col-sm-2">
-                        <input type="number" class="form-control" id="HorizonteInput" placeholder="90 dias" name="horizonte">
+                        <input type="number" class="form-control" id="HorizonteInput" placeholder="90 dias"
+                               name="horizonte">
                     </div>
                     <label for="NotasToi" class="col-sm-2 control-label">Toi:</label>
 
@@ -87,6 +88,10 @@
     </div>
 
     <br>
+
+    <div class="alert alert-warning">
+        <strong>{{ total }}</strong> processos foram distribuidos em até {{ horizonte }} dias.
+    </div>
 
     {% leaflet_map "main" callback="main_map_init" %}
 
@@ -202,8 +207,8 @@
                 // Add GeoJSON layer
                 geojson = L.geoJson(data, {style: style, onEachFeature: function (feature, layer) {
                     feature.properties.processos = processos[parseInt(feature.properties.CD_GEOCODM)];
-                    layer.bindPopup(feature.properties.NM_MUNICIP + "-" + feature.properties.CD_GEOCODM+"<br>"+
-                    feature.properties.processos + " processos.");
+                    layer.bindPopup(feature.properties.NM_MUNICIP + "-" + feature.properties.CD_GEOCODM + "<br>" +
+                            feature.properties.processos + " processos.");
                     layer.on({
                         mouseover: highlightFeature,
                         mouseout: resetHighlight

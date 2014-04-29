@@ -48,12 +48,13 @@ class HomePageView(TemplateView):
             messages.error(self.request, "Todos os campos devem ser preenchidos")
             processos = Simulador.simula(horizonte, toi, corte, neg)
         processos = processos.set_index("geocodigo")
-        context.update({"processos": processos.Novos.to_json() if isinstance(processos,
+        context.update({"processos": processos.Novos.astype(int).to_json() if isinstance(processos,
                                                                              pd.DataFrame) else json.dumps({}),
                         'horizonte': horizonte,
                         'toi': toi,
                         'corte': corte,
                         'neg': neg,
+                        'total': processos.Novos.astype(int).sum()
 
         })
         return context
@@ -64,7 +65,7 @@ class LocalAnalysisView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(LocalAnalysisView, self).get_context_data(**kwargs)
-        municipio = int(self.request.GET.get("municipio", "RIO DE JANEIRO"))
+        municipio = int(self.request.GET.get("municipio", 3304557))
 
         horizonte = 60
         toi = 100

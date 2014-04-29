@@ -44,7 +44,7 @@
 {% endblock %}
 
 
-{% block title %}Análise Local{% endblock %}
+{% block title %}Análise Local - {{ municipio }}{% endblock %}
 
 {% block content %}
     <div class="container-fluid">
@@ -118,6 +118,7 @@
             });
         }
         fill_select()
+        $("#MunSelect").val({{ geocodigo }})
         //Geocodigos dos municípios na área de concessão da Light
         var area_light = [3302007, 3304557, 3302858, 3305109, 3303500, 3300456, 3300308, 3306107, 3303203, 3304144, 3306305, 3305554, 3301801, 3301702, 3302270, 3303856, 3305406,
             3306008, 3304003, 3304409, 3300407, 3303609, 3304128, 3302809, 3303955, 3302908, 3306206, 3301207, 3303708, 3304524, 3300951];
@@ -178,8 +179,8 @@
             info.update();
         }
 
-        function zoomToFeature(feature) {
-            map.fitBounds(feature.getBounds());
+        function zoomToFeature(e) {
+            $(document).data.map.fitBounds(e.target.getBounds());
         }
 
         function main_map_init(map, options) {
@@ -231,6 +232,12 @@
                     feature.properties.processos = processos[parseInt(feature.properties.CD_GEOCODM)];
                     if (feature.properties.CD_GEOCODM == {{ geocodigo }}) {
                         map.fitBounds(layer.getBounds())
+                        layer.setStyle({
+                            weight: 5,
+                            color: '#666',
+                            dashArray: '',
+                            fillOpacity: isInArray(parseInt(layer.feature.properties.CD_GEOCODM), area_light) ? 0.7 : 0.0
+                        });
                     }
                     layer.bindPopup(feature.properties.NM_MUNICIP + "-" + feature.properties.CD_GEOCODM + "<br>" +
                             feature.properties.processos + " processos.");
