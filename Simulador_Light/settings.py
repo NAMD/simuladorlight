@@ -22,9 +22,9 @@ SECRET_KEY = 'h0!&p4(1prvxh=idflgksfljf)c27^(q7q%ui6yn)(g1o&g45%6&7syfd2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0"]
 
 
 # Application definition
