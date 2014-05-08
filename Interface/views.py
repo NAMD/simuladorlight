@@ -54,6 +54,7 @@ class HomePageView(TemplateView):
                         'toi': toi,
                         'corte': corte,
                         'neg': neg,
+                        'geodict': json.dumps(geodict),
                         'total': processos.Novos.astype(int).sum()
 
         })

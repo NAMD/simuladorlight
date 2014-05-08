@@ -113,6 +113,7 @@
             3306008, 3304003, 3304409, 3300407, 3303609, 3304128, 3302809, 3303955, 3302908, 3306206, 3301207, 3303708, 3304524, 3300951];
 
         var processos = {{ processos | safe}};
+        var geodict = {{ geodict |safe }};
         var municipios = L.layerGroup();
         var info = L.control();
         var legend = L.control({position: 'bottomright'});
@@ -184,7 +185,7 @@
 
             info.update = function (props) {
                 this._div.innerHTML = '<h4>Número esperado de processos</h4>' + (props ?
-                        '<b>' + props.NM_MUNICIP + '</b><br />' + props.processos + ' processos'
+                        '<b>' + geodict[parseInt(props.CD_GEOCODM)] + '</b><br />' + props.processos + ' processos'
                         : 'Passe o mouse sobre um município');
             };
 
@@ -216,7 +217,7 @@
                 // Add GeoJSON layer
                 geojson = L.geoJson(data, {style: style, onEachFeature: function (feature, layer) {
                     feature.properties.processos = processos[parseInt(feature.properties.CD_GEOCODM)];
-                    layer.bindPopup(feature.properties.NM_MUNICIP + "-" + feature.properties.CD_GEOCODM + "<br>" +
+                    layer.bindPopup(geodict[parseInt(feature.properties.CD_GEOCODM)] + "-" + feature.properties.CD_GEOCODM + "<br>" +
                             feature.properties.processos + " processos.");
                     layer.on({
                         mouseover: highlightFeature,
