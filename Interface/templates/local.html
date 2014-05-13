@@ -44,11 +44,11 @@
 {% endblock %}
 
 
-{% block title %}Análise Local - {{ municipio }}{% endblock %}
+{% block title %}Análise local: {{ municipio }}{% endblock %}
 
 {% block content %}
     <div class="alert alert-warning">
-        <strong>{{ processos }}</strong> novos processos são esperados em {{ municipio }} em até {{ horizonte }} dias, em decorrência da
+         {{ municipio }} deve ter <strong>{{ processos }}</strong> novos processos em até {{ horizonte }} dias, em decorrência da
         aplicação das notas especificadas abaixo.
     </div>
     <div class="container-fluid">
@@ -67,40 +67,41 @@
                                 <select id="MunSelect" name="municipio">
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="HorizonteInput" class="col-sm-2 control-label">Horizonte de
-                                    Previsão:</label>
+                            <div class="form-group ">
+                                <label for="HorizonteInput" min="10" max="10000" class="col-sm-3 control-label">Horizonte de
+                                    previsão:</label>
 
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <input type="number" class="form-control" id="HorizonteInput" placeholder="90 dias"
                                            name="horizonte">
                                 </div>
-                                <label for="NotasToi" class="col-sm-2 control-label">Toi:</label>
+                                <label for="NotasToi" class="col-sm-2 control-label">Tois:</label>
 
-                                <div class="col-sm-2">
-                                    <input type="number" class="form-control" id="NotasToi" placeholder="100"
+                                <div class="col-sm-3">
+                                    <input type="number" min="0" max="1000000" class="form-control" id="NotasToi" placeholder="100"
                                            name="toi">
                                 </div>
-                                <label for="NotasCorte" class="col-sm-2 control-label">Corte:</label>
 
-                                <div class="col-sm-2">
-                                    <input type="number" class="form-control" id="NotasCorte" placeholder="100"
-                                           name="corte">
-                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="NotasNeg" class="col-sm-2 control-label">Negativação:</label>
+                                <label for="NotasCorte" class="col-sm-2 control-label">Cortes:</label>
 
-                                <div class="col-sm-4">
-                                    <input type="number" class="form-control" id="NotasNeg" placeholder="100"
+                                <div class="col-sm-3">
+                                    <input type="number" min="0" max="1000000" class="form-control" id="NotasCorte" placeholder="100"
+                                           name="corte">
+                                </div>
+                                <label for="NotasNeg" class="col-sm-3 control-label">Negativações: </label>
+
+                                <div class="col-sm-3">
+                                    <input type="number" min="0" max="1000000" class="form-control" id="NotasNeg" placeholder="100"
                                            name="neg">
                                 </div>
-                                <label for="RecInput" class="col-sm-2 control-label">Prevalência de Reclamações:</label>
-
-                                <div class="col-sm-4">
-                                    <input type="number" class="form-control" id="RecInput" placeholder="30%" name="rec"
-                                           disabled>
-                                </div>
+{#                                <label for="RecInput" class="col-sm-2 control-label">Prevalência de Reclamações:</label>#}
+{##}
+{#                                <div class="col-sm-4">#}
+{#                                    <input type="number" class="form-control" id="RecInput" placeholder="30%" name="rec"#}
+{#                                           disabled>#}
+{#                                </div>#}
                             </div>
                             <button type="submit" class="btn btn-default">Atualizar previsão</button>
                         </form>
@@ -257,8 +258,8 @@
                             fillOpacity: isInArray(parseInt(layer.feature.properties.CD_GEOCODM), area_light) ? 0.7 : 0.0
                         });
                     }
-                    layer.bindPopup(feature.properties.NM_MUNICIP + "-" + feature.properties.CD_GEOCODM + "<br>" +
-                            feature.properties.processos + " processos.");
+                    layer.bindPopup(feature.properties.NM_MUNICIP + "<br>" +
+                            feature.properties.processos + (feature.properties.processos > 1 ? ' processos.' : ' processo.'));
                     layer.on({
                         mouseover: highlightFeature,
                         mouseout: resetHighlight

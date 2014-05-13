@@ -53,42 +53,45 @@
 
             <form class="form-horizontal" role="form">
                 <div class="form-group">
-                    <label for="HorizonteInput" class="col-sm-2 control-label">Horizonte de Previsão:</label>
+                    <label for="HorizonteInput" class="col-sm-2 control-label">Horizonte de previsão:</label>
 
                     <div class="col-sm-2">
-                        <input type="number" class="form-control" id="HorizonteInput" placeholder="90 dias"
+                        <input type="number" min="10" max="10000" class="form-control" id="HorizonteInput" placeholder="90 dias"
                                name="horizonte" data-toggle="tooltip" data-placement="top"
-                               title="Entre com a janela de tempo para a previsão.">
+                               title="Entre com a janela de tempo: período em dias, a partir de hoje, sobre o qual será estimado o número de processos esperado.">
                     </div>
-                    <label for="NotasToi" class="col-sm-2 control-label">Toi:</label>
+                    <label for="NotasToi" class="col-sm-2 control-label">Tois:</label>
 
                     <div class="col-sm-2">
-                        <input type="number" class="form-control" id="NotasToi" placeholder="100" name="toi"
+                        <input type="number" min="0" max="1000000" class="form-control" id="NotasToi" placeholder="100" name="toi"
                                data-toggle="tooltip" data-placement="top"
                                title="Entre com o numero de TOIs a serem aplicados.">
                     </div>
-                    <label for="NotasCorte" class="col-sm-2 control-label">Corte:</label>
+                    <label for="NotasCorte" class="col-sm-2 control-label">Cortes:</label>
 
                     <div class="col-sm-2">
-                        <input type="number" class="form-control" id="NotasCorte" placeholder="100" name="corte"
-                               data-toggle="tooltip" data-placement="top" title="Entre com o número de cortes a serem realizados.">
+                        <input type="number" min="0" max="1000000" class="form-control" id="NotasCorte" placeholder="100" name="corte"
+                               data-toggle="tooltip" data-placement="top"
+                               title="Entre com o número de cortes a serem realizados.">
                     </div>
                 </div>
                 <div class=" form-group">
-                        <label for="NotasNeg" class="col-sm-2 control-label">Negativação:</label>
+                    <label for="NotasNeg" class="col-sm-2 control-label">Negativações:</label>
 
-                        <div class="col-sm-4">
-                            <input type="number" class="form-control" id="NotasNeg" placeholder="100" name="neg"
-                                   data-toggle="tooltip" data-placement="bottom" title="Entre com o número de negativações a serem realizadas.">
-                        </div>
-                        <label for=" RecInput" class="col-sm-2 control-label">Prevalência de Reclamações:</label>
-
-                            <div class="col-sm-4">
-                                <input type="number" class="form-control" id="RecInput" placeholder="30%" name="rec"
-                                       disabled data-toggle="tooltip" data-placement="bottom" title="O sistema levará em conta o número de reclamações existentes até o momento.">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-default">Atualizar previsão</button>
+                    <div class="col-sm-4">
+                        <input type="number" min="0" max="1000000" class="form-control" id="NotasNeg" placeholder="100" name="neg"
+                               data-toggle="tooltip" data-placement="bottom"
+                               title="Entre com o número de negativações a serem realizadas.">
+                    </div>
+{#                    <label for=" RecInput" class="col-sm-2 control-label">Prevalência de reclamações:</label>#}
+{##}
+{#                    <div class="col-sm-4">#}
+{#                        <input type="number" class="form-control" id="RecInput" placeholder="30%" name="rec"#}
+{#                               disabled data-toggle="tooltip" data-placement="bottom"#}
+{#                               title="O sistema levará em conta o número de reclamações existentes até o momento.">#}
+{#                    </div>#}
+                </div>
+                <button type="submit" class="btn btn-default">Atualizar previsão</button>
             </form>
         </div>
     </div>
@@ -96,7 +99,8 @@
     <br>
 
     <div class="alert alert-warning">
-        <strong>{{ total }}</strong> novos processos são esperados em até {{ horizonte }} dias, em decorrência da
+        <strong>{{ total }} novos processos</strong> são esperados em até <strong>{{ horizonte }} dias</strong>, em
+        decorrência da
         aplicação das notas especificadas acima.
     </div>
 
@@ -185,7 +189,9 @@
 
             info.update = function (props) {
                 this._div.innerHTML = '<h4>Número esperado de processos</h4>' + (props ?
-                        '<b>' + geodict[parseInt(props.CD_GEOCODM)] + '</b><br />' + props.processos + ' processos'
+                        '<b>' + ((geodict[parseInt(props.CD_GEOCODM)] == undefined) ? 'Não se aplica.' : geodict[parseInt(props.CD_GEOCODM)])
+                                + '</b><br />' +
+                                ((props.processos == undefined) ? 'Fora da área da Light' : props.processos + (props.processos > 1 ? ' processos.' : ' processo.'))
                         : 'Passe o mouse sobre um município');
             };
 
@@ -217,8 +223,8 @@
                 // Add GeoJSON layer
                 geojson = L.geoJson(data, {style: style, onEachFeature: function (feature, layer) {
                     feature.properties.processos = processos[parseInt(feature.properties.CD_GEOCODM)];
-                    layer.bindPopup(geodict[parseInt(feature.properties.CD_GEOCODM)] + "-" + feature.properties.CD_GEOCODM + "<br>" +
-                            feature.properties.processos + " processos.");
+                    layer.bindPopup(geodict[parseInt(feature.properties.CD_GEOCODM)] + "<br>" + feature.properties.processos +
+                            (feature.properties.processos > 1 ? ' processos.' : ' processo.'));
                     layer.on({
                         mouseover: highlightFeature,
                         mouseout: resetHighlight
@@ -236,6 +242,7 @@
                 'Municípios': municipios
             };
             var controls = L.control.layers(null, overlayMaps, {collapsed: true});
+            map.dragging.disable();
             controls.addTo(map);
 
         }

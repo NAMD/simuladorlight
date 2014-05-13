@@ -93,9 +93,12 @@ LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (-22.407111, -43.231864),
     'DEFAULT_ZOOM': 9,
     'MAXIMUM_ZOOM': 13,
-    'TILES': 'http://{s}.tile.cloudmade.com/ad132e106cd246ec961bbdfbe0228fe8/997/256/{z}/{x}/{y}.png',
+    'MINIMUM_ZOOM': 8,
+    'TILES': 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+#'http://{s}.tile.cloudmade.com/ad132e106cd246ec961bbdfbe0228fe8/997/256/{z}/{x}/{y}.png',
     'MINIMAP': False,
-    'ATTRIBUTION_PREFIX': 'Developed by NAMD-EMAp-FGV',
+    'ATTRIBUTION_PREFIX': 'Desenvolvido por NAMD-EMAp-FGV',
+    'RESET_VIEW': False,
 
 
 }
