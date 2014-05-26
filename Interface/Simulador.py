@@ -124,9 +124,7 @@ def simula(horizonte=30, ntoi=0, ncorte=0, nneg=0):
     processos['notas_total'] = processos.tois_apl + processos.cortes_apl + processos.negs_apl
     processos['Novos'] = total_notas - total_notas * np.exp(
         -horizonte * (PARAMETROS.intercept + PARAMETROS.c * processos.cortes_apl + \
-                      PARAMETROS.t * processos.tois_apl + PARAMETROS.n * processos.negs_apl + \
-                      PARAMETROS.tc * processos.tc_apl + PARAMETROS.tn * processos.tn_apl + \
-                      PARAMETROS.cn * processos.cn_apl + PARAMETROS.tcn * processos.tcn_apl))
+                      PARAMETROS.t * processos.tois_apl + PARAMETROS.n * processos.negs_apl))
     #print(processos)
     #print(processos.Novos.sum())
     return processos
@@ -148,9 +146,7 @@ def simula_municipio(horizonte=30, ntoi=0, ncorte=0, nneg=0, municipio=3304557):
     total_notas = ntoi + ncorte + nneg
 
     processos = total_notas - total_notas * np.exp(
-        -horizonte * (PAR.intercept + PAR.c * ncorte + PAR.t * ntoi + PAR.n * nneg + \
-                      PAR.tc * (ntoi + ncorte) + PAR.tn * (ntoi + nneg) + \
-                      PAR.cn * (ncorte + nneg) + PAR.tcn * (ntoi + ncorte + nneg)))
+        -horizonte * (PAR.intercept + PAR.c * ncorte + PAR.t * ntoi + PAR.n * nneg))
 
     return processos
 
