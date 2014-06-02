@@ -97,3 +97,9 @@ class LocalAnalysisView(TemplateView):
 
         })
         return context
+
+class SobreView(TemplateView):
+    template_name = 'sobre.html'
+    def get_context_data(self, **kwargs):
+        context = super(SobreView, self).get_context_data(**kwargs)
+        return context
