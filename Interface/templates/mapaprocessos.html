@@ -60,7 +60,7 @@
                                name="horizonte" data-toggle="tooltip" data-placement="top"
                                title="Entre com a janela de tempo: período em dias, a partir de hoje, sobre o qual será estimado o número de processos esperado.">
                     </div>
-                    <label for="NotasToi" class="col-sm-2 control-label">Tois:</label>
+                    <label for="NotasToi" class="col-sm-2 control-label">TOIs:</label>
 
                     <div class="col-sm-2">
                         <input type="number" min="0" max="1000000" class="form-control" id="NotasToi" placeholder="100" name="toi"
@@ -173,6 +173,15 @@
             info.update();
         }
 
+        function get_popup_content(props){
+            content = '<h4>Número esperado de processos</h4>' + (props ?
+                        '<b>' + ((geodict[parseInt(props.CD_GEOCODM)] == undefined) ? 'Não se aplica.' : geodict[parseInt(props.CD_GEOCODM)])
+                                + '</b><br />' +
+                                ((props.processos == undefined) ? 'Fora da área da Light' : props.processos + (props.processos > 1 ? ' processos.' : ' processo.'))
+                        : 'Escolha outro.');
+            return content
+        }
+
 
         function main_map_init(map, options) {
             $(document).data('map', map)
@@ -223,8 +232,7 @@
                 // Add GeoJSON layer
                 geojson = L.geoJson(data, {style: style, onEachFeature: function (feature, layer) {
                     feature.properties.processos = processos[parseInt(feature.properties.CD_GEOCODM)];
-                    layer.bindPopup(geodict[parseInt(feature.properties.CD_GEOCODM)] + "<br>" + feature.properties.processos +
-                            (feature.properties.processos > 1 ? ' processos.' : ' processo.'));
+                    layer.bindPopup(get_popup_content(feature.properties))
                     layer.on({
                         mouseover: highlightFeature,
                         mouseout: resetHighlight

@@ -131,6 +131,7 @@
             3306008, 3304003, 3304409, 3300407, 3303609, 3304128, 3302809, 3303955, 3302908, 3306206, 3301207, 3303708, 3304524, 3300951];
 
         var processos = {{ processos | safe}};
+        var geodict = {{ geodict |safe }};
         var municipios = L.layerGroup();
         var info = L.control();
         var legend = L.control({position: 'bottomright'});
@@ -196,6 +197,15 @@
             info.update();
         }
 
+        function get_popup_content(props){
+            content = '<h4>Número esperado de processos</h4>' + (props ?
+                        '<b>' + ((geodict[parseInt(props.CD_GEOCODM)] == undefined) ? 'Não se aplica.' : geodict[parseInt(props.CD_GEOCODM)])
+                                + '</b><br />' +
+                                ((props.processos == undefined) ? 'Fora da área da Light' : props.processos + (props.processos > 1 ? ' processos.' : ' processo.'))
+                        : 'Escolha outro.');
+            return content
+        }
+
         function zoomToFeature(e) {
             $(document).data.map.fitBounds(e.target.getBounds());
         }
@@ -215,7 +225,9 @@
 
             info.update = function (props) {
                 this._div.innerHTML = '<h4>Número esperado de processos</h4>' + (props ?
-                        '<b>' + props.NM_MUNICIP + '</b><br />' + props.processos + ' processos'
+                        '<b>' + ((geodict[parseInt(props.CD_GEOCODM)] == undefined) ? 'Não se aplica.' : geodict[parseInt(props.CD_GEOCODM)])
+                                + '</b><br />' +
+                                ((props.processos == undefined) ? 'Fora da área da Light' : props.processos + (props.processos > 1 ? ' processos.' : ' processo.'))
                         : 'Passe o mouse sobre um município');
             };
 
@@ -258,8 +270,7 @@
                             fillOpacity: isInArray(parseInt(layer.feature.properties.CD_GEOCODM), area_light) ? 0.7 : 0.0
                         });
                     }
-                    layer.bindPopup(feature.properties.NM_MUNICIP + "<br>" +
-                            feature.properties.processos + (feature.properties.processos > 1 ? ' processos.' : ' processo.'));
+                    layer.bindPopup(get_popup_content(feature.properties));
                     layer.on({
                         mouseover: highlightFeature,
                         mouseout: resetHighlight

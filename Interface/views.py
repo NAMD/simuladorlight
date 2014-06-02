@@ -9,8 +9,8 @@ from collections import OrderedDict
 from Interface import Simulador
 
 # Área de concessão da Light
-municipios = ['ITAGUAÍ', 'RIO DE JANEIRO', 'MESQUITA', 'SAO JOÃO DE MERITI', 'NOVA IGUAÇU', 'BELFORD ROXO',
-              'BARRA DO PIRAÍ',
+municipios = [u'ITAGUAÍ', 'RIO DE JANEIRO', 'MESQUITA', u'SAO JOÃO DE MERITI', 'NOVA IGUAÇU', 'BELFORD ROXO',
+              u'BARRA DO PIRAÍ',
               'VALENÇA', 'NILÓPOLIS', 'QUEIMADOS', 'VOLTA REDONDA', 'SEROPÉDICA', 'ENG PAULO DE FRONTIN',
               'DUQUE DE CAXIAS',
               'JAPERI', 'PATY DO ALFERES', 'SAPUCAIA', 'TRÊS RIOS', 'PIRAÍ', 'RIO CLARO', 'BARRA MANSA', 'PARACAMBI',
@@ -25,8 +25,8 @@ geocodigos = [3302007, 3304557, 3302858, 3305109, 3303500, 3300456, 3300308, 330
               3306206, 3301207, 3303708, 3304524, 3300951,
 ]
 
-mundict = OrderedDict(zip(municipios, geocodigos))
-geodict = OrderedDict(zip(geocodigos, municipios))
+mundict = OrderedDict(sorted(zip(municipios, geocodigos)))
+geodict = OrderedDict(sorted(zip(geocodigos, municipios), key=lambda x: x[1]))
 
 class HomePageView(TemplateView):
     template_name = 'mapaprocessos.html'
@@ -87,6 +87,7 @@ class LocalAnalysisView(TemplateView):
             'municipio': geodict[municipio],
             'geocodigo': municipio,
             'mundict': json.dumps(list(mundict.items())),
+            'geodict': json.dumps(geodict),
             'processos': int(processos),
             'horizonte': horizonte,
             'toi': toi,
